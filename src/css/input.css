@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles for animations or specific elements if needed */
+.char.correct {
+    @apply text-green-600 dark:text-green-400;
+}
+
+.char.incorrect {
+    @apply text-red-600 dark:text-red-400;
+}
+
+.char.current {
+    @apply relative;
+}
+
+.char.current::after {
+    content: '';
+    @apply absolute bottom-0 left-0 right-0 h-1 bg-indigo-500 dark:bg-indigo-300 animate-blink;
+}
+
+.difficulty-menu a.selected,
+.time-menu a.selected {
+    @apply font-bold bg-indigo-100 dark:bg-indigo-600;
+}
+
+/* Optional: Animated background */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 10% 20%, rgba(255, 12, 12, 0.1) 0%, rgba(2, 0, 36, 0) 70%),
+                radial-gradient(circle at 90% 80%, rgba(0, 150, 255, 0.1) 0%, rgba(2, 0, 36, 0) 70%);
+    opacity: 0.3;
+    transition: background-image 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    z-index: -1;
+}
+
+.dark body::before {
+    background: radial-gradient(circle at 10% 20%, rgba(255, 12, 12, 0.05) 0%, rgba(2, 0, 36, 0) 70%),
+                radial-gradient(circle at 90% 80%, rgba(0, 150, 255, 0.05) 0%, rgba(2, 0, 36, 0) 70%);
+    opacity: 0.2;
+}
