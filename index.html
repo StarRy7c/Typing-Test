@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TypeMaster Pro - Typing Test</title>
+    <link href="./src/css/output.css" rel="stylesheet">
+    <link rel="icon" href="./src/img/favicon.ico" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/dayjs.min.js"></script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen flex flex-col transition-colors duration-500">
+
+    <header class="sticky top-0 bg-white dark:bg-gray-800 shadow-md p-4 z-50 transition-colors duration-500">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">TypeMaster Pro</h1>
+            <nav class="space-x-4 flex items-center">
+                <div class="relative inline-block text-left">
+                    <button id="difficulty-toggle" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out">
+                        Difficulty: <span id="current-difficulty">Easy</span>
+                    </button>
+                    <div id="difficulty-menu" class="absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white dark:bg-gray-700 ring-1 ring-black ring-opacity-5 hidden z-10">
+                        <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="difficulty-toggle">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 selected" data-level="easy" role="menuitem">Easy</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600" data-level="medium" role="menuitem">Medium</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600" data-level="hard" role="menuitem">Hard</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative inline-block text-left">
+                    <button id="time-toggle" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out">
+                        Time: <span id="current-time">60s</span>
+                    </button>
+                    <div id="time-menu" class="absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white dark:bg-gray-700 ring-1 ring-black ring-opacity-5 hidden z-10">
+                        <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="time-toggle">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600" data-duration="15" role="menuitem">15s</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600" data-duration="30" role="menuitem">30s</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 selected" data-duration="60" role="menuitem">60s</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600" data-duration="120" role="menuitem">120s</a>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="theme-toggle" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M3 12h1m15.325-7.325l-.707-.707M4.382 19.382l-.707-.707m10.707 0l-.707.707m-10.707 0l-.707-.707M12 18a6 6 0 100-12 6 6 0 000 12z"></path></svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto p-8 flex flex-col items-center justify-center relative">
+
+        <div id="typing-area" class="w-full max-w-4xl bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8 mb-8 transition-all duration-500 overflow-hidden min-h-[200px] flex flex-wrap items-start justify-center text-3xl font-mono relative">
+            <p id="countdown" class="text-6xl font-bold text-indigo-500 dark:text-indigo-400 absolute inset-0 flex items-center justify-center bg-white dark:bg-gray-800 bg-opacity-90 dark:bg-opacity-90 z-20 transition-opacity duration-500 opacity-0 pointer-events-none">
+                3
+            </p>
+        </div>
+
+        <input type="text" id="text-input" class="sr-only" autofocus autocomplete="off" autocapitalize="off" spellcheck="false">
+
+        <div id="stats-display" class="w-full max-w-4xl bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8 flex justify-around items-center text-center transition-all duration-500 opacity-0 scale-95 pointer-events-none">
+            <div class="flex flex-col items-center">
+                <span class="text-5xl font-bold text-indigo-600 dark:text-indigo-400" id="wpm-display">0</span>
+                <span class="text-gray-600 dark:text-gray-300">WPM</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <span class="text-5xl font-bold text-emerald-600 dark:text-emerald-400" id="accuracy-display">0%</span>
+                <span class="text-gray-600 dark:text-gray-300">Accuracy</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <span class="text-5xl font-bold text-blue-600 dark:text-blue-400" id="timer-display">60s</span>
+                <span class="text-gray-600 dark:text-gray-300">Time Left</span>
+            </div>
+        </div>
+
+        <div id="chart-container" class="w-full max-w-4xl bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 mt-8 transition-all duration-500 opacity-0 scale-95 pointer-events-none">
+            <canvas id="liveChart"></canvas>
+        </div>
+
+        <div id="result-screen" class="fixed inset-0 bg-gray-100 dark:bg-gray-900 bg-opacity-95 dark:bg-opacity-95 flex items-center justify-center z-50 transition-opacity duration-500 opacity-0 pointer-events-none">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-10 text-center transform scale-90 opacity-0 transition-all duration-700 ease-out">
+                <h2 class="text-5xl font-extrabold text-indigo-600 dark:text-indigo-400 mb-6 animate-fade-in-up">Test Complete!</h2>
+                <div class="grid grid-cols-2 gap-6 text-xl mb-8">
+                    <div class="bg-indigo-50 dark:bg-indigo-900 p-4 rounded-lg animate-scale-in">
+                        <p class="text-gray-600 dark:text-gray-300">Final WPM</p>
+                        <p id="final-wpm" class="text-4xl font-bold text-indigo-700 dark:text-indigo-300 mt-2"></p>
+                    </div>
+                    <div class="bg-emerald-50 dark:bg-emerald-900 p-4 rounded-lg animate-scale-in delay-100">
+                        <p class="text-gray-600 dark:text-gray-300">Accuracy</p>
+                        <p id="final-accuracy" class="text-4xl font-bold text-emerald-700 dark:text-emerald-300 mt-2"></p>
+                    </div>
+                    <div class="bg-blue-50 dark:bg-blue-900 p-4 rounded-lg animate-scale-in delay-200">
+                        <p class="text-gray-600 dark:text-gray-300">Keystrokes</p>
+                        <p id="final-keystrokes" class="text-4xl font-bold text-blue-700 dark:text-blue-300 mt-2"></p>
+                    </div>
+                    <div class="bg-red-50 dark:bg-red-900 p-4 rounded-lg animate-scale-in delay-300">
+                        <p class="text-gray-600 dark:text-gray-300">Mistakes</p>
+                        <p id="final-mistakes" class="text-4xl font-bold text-red-700 dark:text-red-300 mt-2"></p>
+                    </div>
+                </div>
+                <button id="restart-button" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full shadow-lg text-lg transform hover:scale-105 transition-all duration-300 ease-out animate-fade-in-up delay-400">
+                    Try Again
+                </button>
+
+                <div id="past-results-container" class="mt-10 bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-md animate-fade-in-up delay-500">
+                    <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">Your Past Scores</h3>
+                    <div id="past-results-chart-container" class="h-64 mb-6">
+                        <canvas id="pastResultsChart"></canvas>
+                    </div>
+                    <div id="past-results-list" class="max-h-48 overflow-y-auto">
+                        </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="p-4 text-center text-gray-600 dark:text-gray-400 transition-colors duration-500">
+        <p>Created with ❤️ by Nishkarsh Pratap Singh</p>
+    </footer>
+
+    <script type="module" src="./src/js/main.js"></script>
+</body>
+</html>
